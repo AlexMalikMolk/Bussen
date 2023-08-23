@@ -1,109 +1,133 @@
 ﻿namespace Bussen
 {
-    /*Börja längst ner i dokumentet och klassen "Program".
-	Den klassen är liten och har i uppgiften att köra igång programmet genom att skapa en buss och sedan anropa metoden Run().
-	I beskrivningen av projektet påpekas vikten av att koda stegvis. I detta fall kan det handla om att ni bara ska skriva
-	ut en text i Run()-metoden.
-	 */
-    class Buss
+    // Klass för att representera en passagerare med en specifik ålder.
+    class Passagerare
     {
+        public int Age { get; set; }
 
-        public int[] passagerare;
-        public int antal_passagerare;
-
-
-        public void Run()
+        public Passagerare(int age)
         {
-            Console.WriteLine("Welcome to the awesome Buss-simulator");
-            //Lägg till menyval här
-            //Det ska finnas menyval för att lägga till passagerare, skriva ut alla passagerare, beräkna total ålder, beräkna genomsnittlig ålder, hitta passagerare med en viss ålder, sortera bussen efter ålder, hitta passagerare med högst ålder
-            //Det ska också finnas ett menyval för att avsluta programmet
-            
-
-
-
-
-            //Jag rekommenderar switch och case här
-            //I filmen nummer 1 för slutprojektet så skapar jag en meny på detta sätt.
-            //Film nummer 1) https://youtu.be/GKC1QafdcM0 
-
-            //Dessutom visar jag hur man anropar metoderna nedan via menyn
-            //Börja nu med att köra koden för att se att det fungerar innan ni sätter igång med menyn.
-            //Bygg sedan steg-för-steg och testkör koden.
+            Age = age;
         }
-
-        //Metoder för betyget E
-
-        public void add_passenger()
-        {
-            //Lägg till passagerare. Här skriver man då in ålder men eventuell annan information.
-            //Om bussen är full kan inte någon passagerare stiga på
-        }
-
-        public void print_buss()
-        {
-            //Skriv ut alla värden ur vektorn. Alltså - skriv ut alla passagerare
-        }
-
-        public int calc_total_age()
-        {
-
-            //Beräkna den totala åldern. 
-            //För att koden ska fungera att köra så måste denna metod justeras, alternativt att man temporärt sätter metoden med void
-        }
-
-        //Metoder för betyget C
-
-        public double calc_average_age()
-        {
-            //Betyg C
-            //Beräkna den genomsnittliga åldern. Kanske kan man tänka sig att denna metod ska returnera något annat värde än heltal?
-            //För att koden ska fungera att köra så måste denna metod justeras, alternativt att man temporärt sätter metoden med void
-        }
-
-        public int max_age()
-        {
-            //Betyg C
-            //ta fram den passagerare med högst ålder. Detta ska ske med egen kod och är rätt klurigt.
-            //För att koden ska fungera att köra så måste denna metod justeras, alternativt att man temporärt sätter metoden med void
-        }
-
-        public void find_age()
-        {
-            //Visa alla positioner med passagerare med en viss ålder
-            //Man kan också söka efter åldersgränser - exempelvis 55 till 67
-            //Betyg C
-            //Beskrivs i läroboken på sidan 147 och framåt (kodexempel på sidan 149)
-
-        }
-
-        public void sort_buss()
-        {
-            //Sortera bussen efter ålder. Tänk på att du inte kan ha tomma positioner "mitt i" vektorn.
-            //Beskrivs i läroboken på sidan 147 och framåt (kodexempel på sidan 159)
-            //Man ska kunna sortera vektorn med bubble sort
-        }
-
-
-
-
-
     }
 
+    // Klass för att representera bussen och dess funktioner.
+    class Buss
+    {
+        private Passagerare[] passagerare = new Passagerare[50]; // Array för att lagra passagerare.
+        private int antal_passagerare = 0;
+
+        // Huvudmetod som kör programmet och visar menyn till användaren.
+        public void Run()
+        {
+            bool running = true;
+            while (running)
+            {
+                Console.Clear(); // Rensa skärmen innan menyn visas
+
+                Console.WriteLine("Välkommen till Buss-simulatorn!");
+                Console.WriteLine("1. Lägg till en passagerare");
+                Console.WriteLine("2. Skriv ut alla passagerare");
+                Console.WriteLine("3. Visa total ålder av alla passagerare");
+                Console.WriteLine("4. Avsluta programmet");
+                Console.Write("Välj ett alternativ: ");
+
+                int choice;
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    Console.WriteLine();
+
+                    switch (choice)
+                    {
+                        case 1:
+                            AddPassenger();
+                            Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                            Console.ReadKey();
+                            break;
+                        case 2:
+                            PrintBuss();
+                            Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                            Console.ReadKey();
+                            break;
+                        case 3:
+                            Console.WriteLine($"Total ålder av alla passagerare: {TotalAge()}");
+                            Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                            Console.ReadKey();
+                            break;
+                        case 4:
+                            Console.WriteLine("Tack för att du använde Buss-simulatorn! Hejdå!");
+                            running = false;
+                            break;
+                        default:
+                            Console.WriteLine("Ogiltigt val. Försök igen.");
+                            Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                            Console.ReadKey();
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ogiltigt val. Försök igen.");
+                    Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        // Metod för att lägga till en passagerare till bussen.
+        private void AddPassenger()
+        {
+            if (antal_passagerare < 50)
+            {
+                Console.Write("Ange ålder för passageraren: ");
+                int age;
+                if (int.TryParse(Console.ReadLine(), out age))
+                {
+                    passagerare[antal_passagerare] = new Passagerare(age);
+                    antal_passagerare++;
+                    Console.WriteLine("Passagerare tillagd!");
+                }
+                else
+                {
+                    Console.WriteLine("Ogiltig ålder. Försök igen.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Bussen är full!");
+            }
+        }
+
+        // Metod för att skriva ut åldern för alla passagerare på bussen.
+        private void PrintBuss()
+        {
+            Console.WriteLine("Passagerares åldrar:");
+            for (int i = 0; i < antal_passagerare; i++)
+            {
+                Console.WriteLine(passagerare[i].Age);
+            }
+        }
+
+        // Metod för att beräkna den totala åldern av alla passagerare på bussen.
+        private int TotalAge()
+        {
+            int totalAge = 0;
+            for (int i = 0; i < antal_passagerare; i++)
+            {
+                totalAge += passagerare[i].Age;
+            }
+            return totalAge;
+        }
+    }
+
+    // Huvudklass för att starta programmet.
     class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            //Denna del körs först! 
-            //Denna del av koden kan upplevas väldigt förvirrande. Men i sådana fall är det bara att "skriva av".
-            //Programmet skapar ett så kallat objekt av klassen "Buss". Det är det objekt vi kommer jobba med.
-            //Följande rad skapar en buss:
             var minbuss = new Buss();
-            //Följande rad anropar metoden Run() som finns i vårt nya buss-objekt.
+            Console.Clear();
             minbuss.Run();
-            //När metoden Run() tar slut så kommer koden fortsätta här. Då är programmet slut
-            Console.Write("Press any key to continue . . . ");
-            Console.ReadKey(true);
         }
     }
 }
